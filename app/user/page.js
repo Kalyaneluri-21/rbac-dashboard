@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function UserDashboard() {
   const [tasks, setTasks] = useState([]);
@@ -10,6 +11,7 @@ export default function UserDashboard() {
   });
   const [editId, setEditId] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const router = useRouter();
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -35,17 +37,14 @@ export default function UserDashboard() {
     e.preventDefault();
     setErrorMsg("");
 
-    const res = await fetch(
-      editId ? `/api/task/${editId}` : "/api/task",
-      {
-        method: editId ? "PATCH" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(form),
-      }
-    );
+    const res = await fetch(editId ? `/api/task/${editId}` : "/api/task", {
+      method: editId ? "PATCH" : "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(form),
+    });
 
     const data = await res.json();
 
@@ -82,18 +81,29 @@ export default function UserDashboard() {
     setEditId(task._id);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-        
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">
-          My Tasks Dashboard
-        </h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">
+            My Tasks Dashboard
+          </h1>
+
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+          >
+            Logout
+          </button>
+        </div>
 
         {errorMsg && (
-          <p className="text-red-500 mb-4 bg-red-100 p-2 rounded">
-            {errorMsg}
-          </p>
+          <p className="text-red-500 mb-4 bg-red-100 p-2 rounded">{errorMsg}</p>
         )}
 
         {/* FORM */}
@@ -169,7 +179,6 @@ export default function UserDashboard() {
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

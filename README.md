@@ -105,7 +105,7 @@ src/
  │   │   ├── admin/
  │   │   ├── user/
  │   │   ├── task/
- │   │   └── seed/
+ │   │   
  │   ├── login/
  │   ├── super-admin/
  │   ├── admin/
@@ -146,7 +146,7 @@ npm install
 ### 3. Create `.env.local`
 
 ```env
-MONGODB_URI=mongodb://127.0.0.1:27017/rbac-dashboard
+MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
 ```
 
@@ -162,14 +162,22 @@ npm run dev
 
 ## 🧪 Initial Setup (Super Admin)
 
-A temporary seed API is provided:
+The application automatically creates a Super Admin when the database connects for the first time.
 
-```bash
-GET /api/seed
-```
+This is handled inside: src/lib/db.js
 
-* Creates a **Super Admin**
-* Should be removed or protected in production
+No manual API call is required.
+
+---
+
+## 🌐 Deployment   
+
+The application is deployed using Vercel.
+
+Live URL:
+rbac-dashboard-sand.vercel.app
+
+Backend APIs are handled using Next.js server functions, and MongoDB Atlas is used as the cloud database.
 
 ---
 
@@ -209,8 +217,8 @@ Password: 123456
 
 ## ⚠️ Notes
 
-* Seed API is only for development/testing
-* In production, it should be removed or secured
+* Super Admin is created automatically on first DB connection
+* No public seed API is exposed (improves security)
 
 ---
 

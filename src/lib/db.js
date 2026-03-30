@@ -4,11 +4,13 @@ import User from "@/models/User";
 export const connectDB = async () => {
   if (mongoose.connection.readyState >= 1) return;
 
+   console.log("MONGODB_URI:", process.env.MONGODB_URI);
+
   await mongoose.connect(process.env.MONGODB_URI);
 
   console.log("MongoDB Connected");
 
-  // ✅ Auto seed
+  
   const existing = await User.findOne({ role: "superadmin" });
 
   if (!existing) {
@@ -16,7 +18,7 @@ export const connectDB = async () => {
       name: "Super Admin",
       email: "superadmin@gmail.com",
       phone: "9999999999",
-      password: "123456", // ⚠️ hash if needed
+      password: "123456", 
       role: "superadmin",
     });
 

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function SuperAdmin() {
   const [admins, setAdmins] = useState([]);
@@ -15,6 +16,7 @@ export default function SuperAdmin() {
   });
 
   const [editId, setEditId] = useState(null);
+  const router = useRouter();
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -103,12 +105,26 @@ export default function SuperAdmin() {
     setEditId(item._id);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-6xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">
-          Super Admin Dashboard
-        </h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">
+            Super Admin Dashboard
+          </h1>
+
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+          >
+            Logout
+          </button>
+        </div>
 
         {errorMsg && (
           <p className="text-red-500 mb-4 bg-red-100 p-2 rounded">{errorMsg}</p>
